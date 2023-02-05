@@ -1,0 +1,34 @@
+version: '3'
+services:
+  java-srv:
+    build: java-srv
+    volumes:
+      - ./java-srv/log:/root/log
+    depends_on:
+      - flyway-srv
+    links:
+      - "db:db"
+
+  flyway-srv:
+    build: flyway-srv
+    depends_on:
+      - db
+    links:
+      - "db:db"
+
+  db:
+    build: db
+    environment:
+      - POSTGRES_DB=animal
+      - POSTGRES_USER=maria
+      - POSTGRES_PASSWORD=pass
+
+#   adminer:
+#     image: adminer
+#     restart: always
+#     ports:
+#       - 80:8080
+#     depends_on:
+#       - flyway-srv
+#     links:
+#       - "db:db"
